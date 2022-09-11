@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "644034695363",
+    "project_id": "myfiles-6055e",
+    "storage_bucket": "myfiles-6055e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644034695363:android:e2be23d8fa638be18cd276",
+        "android_client_info": {
+          "package_name": "com.snowflai.files"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644034695363-qihs01t3k924vedlis0q4pjlgvito92l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARawn-KR8NSK4jSXBsrBf71DHUdcbjdIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644034695363-qihs01t3k924vedlis0q4pjlgvito92l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
