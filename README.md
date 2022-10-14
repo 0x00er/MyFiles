@@ -44,7 +44,7 @@ You can run Android apps on your computer using an Android emulator app. There'r
 
 Installing BlueStacks is a very simple process. All you have to do is download the program from the BlueStacks website and run the file. The installer file is quite large and the engine setup may take awhile.
 
-Once the initial installation process is done, opening the program doesn’t take more than a few seconds. when it opens, you will be asked to sign in using a Google account like any Android smartphone or tablet.
+Once the initial installation process is done, opening the program doesn’t take more than a few seconds. when it opens, you will be asked to sign in using a Google account like any Android smartphone/tablet.
 
 During the installation process, you may come across error messages like “Hardware acceleration is not available on your system” or “This host supports Intel VT-x, but it is disabled.” Enabling hardware acceleration features help virtualization apps run smoother and much faster — apps like Bluestacks are basically running an entire OS on top of your current system.
 
