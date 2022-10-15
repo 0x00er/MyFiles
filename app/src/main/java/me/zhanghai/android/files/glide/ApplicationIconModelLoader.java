@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
  * All Rights Reserved.
  */
 
 package me.zhanghai.android.files.glide;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
@@ -19,48 +19,41 @@ import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.signature.ObjectKey;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java8.nio.file.Path;
-import me.zhanghai.android.files.file.MimeTypes;
-import me.zhanghai.android.files.provider.linux.LinuxFileSystemProvider;
+import me.zhanghai.android.files.compat.ApplicationInfoCompat;
 
-public class ApkIconModelLoader implements ModelLoader<Path, Drawable> {
+public class ApplicationIconModelLoader implements ModelLoader<ApplicationInfo, Drawable> {
 
     @NonNull
     private final Context context;
 
-    public ApkIconModelLoader(@NonNull Context context) {
+    public ApplicationIconModelLoader(@NonNull Context context) {
         this.context = context.getApplicationContext();
     }
 
     @Override
-    public boolean handles(@NonNull Path model) {
-        if (!LinuxFileSystemProvider.isLinuxPath(model)) {
-            return false;
-        }
-        String mimeType = MimeTypes.getMimeType(model.toFile().getPath());
-        return Objects.equals(mimeType, "application/vnd.android.package-archive");
+    public boolean handles(@NonNull ApplicationInfo model) {
+        return true;
     }
 
     @Nullable
     @Override
-    public LoadData<Drawable> buildLoadData(@NonNull Path model, int width, int height,
+    public LoadData<Drawable> buildLoadData(@NonNull ApplicationInfo model, int width, int height,
                                             @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(model), new Fetcher(model.toFile().getPath(), context));
+        String key = model.packageName + ":" + ApplicationInfoCompat.getLongVersionCode(model);
+        return new LoadData<>(new ObjectKey(key), new Fetcher(model, context));
     }
 
     private static class Fetcher implements DataFetcher<Drawable> {
 
         @NonNull
-        private final String path;
+        private final ApplicationInfo applicationInfo;
         @NonNull
         private final Context context;
 
-        public Fetcher(@NonNull String path, @NonNull Context context) {
-            this.path = path;
+        public Fetcher(@NonNull ApplicationInfo applicationInfo, @NonNull Context context) {
+            this.applicationInfo = applicationInfo;
             this.context = context.getApplicationContext();
         }
 
@@ -68,20 +61,7 @@ public class ApkIconModelLoader implements ModelLoader<Path, Drawable> {
         public void loadData(@NonNull Priority priority,
                              @NonNull DataCallback<? super Drawable> callback) {
             PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(path, 0);
-            if (packageInfo == null) {
-                callback.onLoadFailed(new NullPointerException(
-                        "PackageManager.getPackageArchiveInfo() returned null: " + path));
-                return;
-            }
-            packageInfo.applicationInfo.sourceDir = path;
-            packageInfo.applicationInfo.publicSourceDir = path;
-            Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-            if (icon == null) {
-                callback.onLoadFailed(new NullPointerException(
-                        "ApplicationInfo.loadIcon() returned null: " + path));
-                return;
-            }
+            Drawable icon = packageManager.getApplicationIcon(applicationInfo);
             // TODO: Add shadow for adaptive icons.
             callback.onDataReady(icon);
         }
@@ -105,7 +85,7 @@ public class ApkIconModelLoader implements ModelLoader<Path, Drawable> {
         }
     }
 
-    public static class Factory implements ModelLoaderFactory<Path, Drawable> {
+    public static class Factory implements ModelLoaderFactory<ApplicationInfo, Drawable> {
 
         @NonNull
         private final Context context;
@@ -116,8 +96,9 @@ public class ApkIconModelLoader implements ModelLoader<Path, Drawable> {
 
         @NonNull
         @Override
-        public ModelLoader<Path, Drawable> build(@NonNull MultiModelLoaderFactory multiFactory) {
-            return new ApkIconModelLoader(context);
+        public ModelLoader<ApplicationInfo, Drawable> build(
+                @NonNull MultiModelLoaderFactory multiFactory) {
+            return new ApplicationIconModelLoader(context);
         }
 
         @Override
