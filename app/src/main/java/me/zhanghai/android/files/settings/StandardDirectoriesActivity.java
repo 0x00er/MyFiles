@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
  * All Rights Reserved.
  */
 
@@ -14,11 +14,11 @@ import androidx.annotation.Nullable;
 import me.zhanghai.android.files.AppActivity;
 import me.zhanghai.android.files.util.FragmentUtils;
 
-public class BookmarkDirectoriesActivity extends AppActivity {
+public class StandardDirectoriesActivity extends AppActivity {
 
     @NonNull
     public static Intent newIntent(@NonNull Context context) {
-        return new Intent(context, BookmarkDirectoriesActivity.class);
+        return new Intent(context, StandardDirectoriesActivity.class);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class BookmarkDirectoriesActivity extends AppActivity {
         findViewById(android.R.id.content);
 
         if (savedInstanceState == null) {
-            FragmentUtils.add(BookmarkDirectoriesFragment.newInstance(), this,
+            FragmentUtils.add(StandardDirectoriesFragment.newInstance(), this,
                     android.R.id.content);
         }
     }
